@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "buzztech-398823",
+  "private_key_id": "7a25ed1a8b6b2e35d2fd910461f5cff3b918d76f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+6cgBVvna/7Wf\nzOOF3NPR01xlTIXDIgmkbZpuFo/nwNHiXyDjJSlUSWE7HUDfc6IidvexbAoFrAPR\n+Y8lKrGHbOpg4KQKGLyIGp005dQeICs8X24jclxaSzxPgxqDIC9HgkuAE/glR7Ab\nnDAohl9gsBUnL6jSu5rVCXQ9hPlzj6hzqIPIchG12dDPOyqXGbVClvPAuMiv3o/C\nvHWs5aN3ltqQojALGVSFQUUkY4GPFc8hoz3sqatB/jFuuVKuZax6n9q1y7zPiqI/\nHtxSOxvWmUsXEsY3W3OdyZZZsct0lmXSKircYfcomvE017xYUDKaEkwCwsU4OV1k\nvu/C+6+TAgMBAAECggEASdU84fPCrmT9V19UUMVd8ASHc6+7/YLQ6tPuiQvVvKGw\nKhVzMRWCndPBNCz0lVZxilWrJmUrnRTw50hWCWAxBzhijnPiTPtTEmoEiVwnBD2Z\nqwAXJsNIHy2AlhmUa8jLMCMeUtqmObi3TX5Ci7Gn+ksu6xg9+L3QO/qrh01BceSd\n3qYKbGbhycqG9IgvrBgHSmGBU2+iXBuHXV2gGAiaSk9kS0dRWJvQG8OhbCJgvxVY\nJmCj2PcuwLI4PeQ2lAaJp/4tOzGqM89WEA0xWKATp8DTDF263FDRYgqmJJ8Wn4zH\nGGWZZNeym4hug00AsHPyQRDxuDPniqfuTDGIPeM89QKBgQDyZS6D/VtvJVHKcdmr\nfV8EJi/Aj2fv79lVUn2yph+milUV6ydAJm5cIK5B1mm7UHBpU+8oNeJyabfKbi2V\nlZpoUzUpOg7DfbBRZs7vIcn7Zc/1uqzMm7VaH/iZ6euuOsjsAIarWeAyYbg9jL0Y\nm+F5QkxcdRcsbM5RpyjfbNaDxwKBgQDJoONTWDFx1A3xmQRt4auBzTFVFxh1SKjw\n6yrS8rolpHYeFsFV8D3HD8n7hkwvUyJERyxSqfIBVEICYXWzKm2burKXP7PPD1N3\na2l7SekutD4FPMvgNHs91EFfGtUGYyoyOGnXjPW8ryObSDIIQX0qXck14EPiI1za\n8bifftmd1QKBgF/dMmNTDRlM+icFld+jyrM6YwJV9PZItnxvDnVcDAJyjSoJAVH2\noQjgh+pT4ScKrhqJ7njJrtAvDVgK8Q5Kx3FhDxJJ+tLH37ah4U9j3p0FbBS0Cmk1\nX6jQIiLFB8e1SgdEQf58ohVq3lHBWnvkEm1Bki+yw0J3mbVjVd/fDIu7AoGAOiJ5\naP50wy0xGAfWjxgSK0rOfoo6MxbQHyavIkN6CIByzhohhHXQWiTjR/Jg5QRDTQx4\nax00+c0hey4+kXoaQFyEQbfMUFdK6ZO+xh15bk3p0/jDj9GR9zHL53AFG+JbuD8r\nxUqPT+fvjEY0psy7GgwQh8gxynIHw9kOMm6QsEECgYEAqtEo7Dnd7qpYyI2XnkQY\n3jwrUusNQPSsDsGI+Yieiyd+FscGlCAYocBjoUM0sEHIcJf/+kfnNJU+yO4e5WTk\nKDdOK/r885ueF+SC9GOp5rMukhmvb15ErYbaclBhkunPpU3gJvDcWoW++8wqippd\nFXFPi1wxvvqmfm+cKMIPSh4=\n-----END PRIVATE KEY-----\n",
+  "client_email": "buzztech-storage@buzztech-398823.iam.gserviceaccount.com",
+  "client_id": "115700999916642323799",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/buzztech-storage%40buzztech-398823.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
