@@ -40,6 +40,8 @@ def create_step(db: Session, step: schemas.StepCreate):
     """Cria uma nova etapa no banco de dados"""
     db_step = Step(
         name=step.name,
+        objective= step.objective,
+        endingDate= step.endingDate,
         endDate=step.endDate,
         process_id=step.process_id,
         priority=step.priority,
@@ -58,6 +60,8 @@ def update_step(db: Session, step: schemas.Step):
 
     if db_step:
         db_step.name = step.name
+        db_step.objective= step.objective
+        db_step.endingDate= step.endingDate
         db_step.endDate = step.endDate
         db_step.process_id = step.process_id
         db_step.priority = step.priority
