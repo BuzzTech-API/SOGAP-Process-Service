@@ -23,6 +23,7 @@ class RequestForEvidenceBase(BaseModel):
     step_id: int
     user_id: int
     evidenceValidationDate: date
+    deliveryDate: date
     is_validated: bool
     is_actived: bool
 
