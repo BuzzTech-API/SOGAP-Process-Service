@@ -45,6 +45,7 @@ def create_request_for_evidence(
         step_id=request_for_evidence.step_id,
         user_id=request_for_evidence.user_id,
         evidenceValidationDate=request_for_evidence.evidenceValidationDate,
+        deliveryDate=request_for_evidence.deliveryDate,
         is_validated=request_for_evidence.is_validated,
         is_actived=request_for_evidence.is_actived,
     )
