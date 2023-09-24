@@ -78,8 +78,11 @@ async def create_upload_file(
 
         
         lista_emails = emails.split('&') #pega a string vindo do frontend, separa os emails e adciona em uma lista
-        send_mail.EmailSchema = lista_emails
-        
+        lista_email_limpa = []
+        for i in lista_emails:
+            if i !='':
+                lista_email_limpa.append(i)
+        send_mail.EmailSchema = lista_email_limpa
         # mensagem principal que vai chegar no email dos responsáveis
         html = """
         <h5>Processo</h5>

@@ -6,6 +6,13 @@ from database.database import get_db
 from typing import Annotated, List
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import datetime, timedelta
+from passlib.context import CryptContext
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+## Verifica a senha
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -14,12 +21,13 @@ router = APIRouter(tags=["Login"])
 
 @router.post("/login")
 def login(login: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    print(pwd_context.hash('adm'))
     user = user_crud.get_user_by_email(email=login.username, db=db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Invalid Credentials"
         )
-    if not user.password == login.password:
+    if not verify_password(login.password,user.password):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Invalid Credentials"
         )

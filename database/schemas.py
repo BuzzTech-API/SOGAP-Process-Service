@@ -61,6 +61,7 @@ class Step(StepBase):
 
 class ProcessBase(BaseModel):
     title: str
+    description:str
     objective: str
     endingDate: date
     createDate: date
@@ -129,19 +130,6 @@ class ProcessUserOnlyUser(ProcessUserBase):
 
 
 
-
-class ProcessAll(ProcessBase):
-    id: int
-    steps: List[Step]
-    users: List[ProcessUserOnlyUser]
-
-    class Config:
-        from_attributes = True
-
-
-
-
-
 class UserStepBase(BaseModel):
     user_id: int
     step_id: int
@@ -154,6 +142,35 @@ class UserStep(UserStepBase):
     user: User
     class Config:
         from_attributes = True
+
+class UserStepOnlyUser(UserStepBase):
+    user: User
+    class Config:
+        from_attributes = True
+
+
+class StepForProcess(StepBase):
+    id: int
+    requests: List[RequestForEvidence]
+    users: List[UserStepOnlyUser]
+
+
+    class Config:
+        from_attributes = True
+
+
+class ProcessAll(ProcessBase):
+    id: int
+    steps: List[StepForProcess]
+    users: List[ProcessUserOnlyUser]
+
+    class Config:
+        from_attributes = True
+
+
+
+
+
 
 
 

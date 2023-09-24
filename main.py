@@ -7,15 +7,15 @@ from routers import evidence, process_user, process, request_for_evidence, step,
 
 database.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(version="5.0.0")
 
 user.create_admin()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:3000'],
-    allow_methods=['*'],
-    allow_headers=['*']
+    allow_origins=["*"],  # Ou especifique origens específicas
+    allow_methods=["*"],  # Ou especifique métodos específicos (GET, POST, etc.)
+    allow_headers=["*"],  # Ou especifique cabeçalhos específicos
 )
 
 app.include_router(login.router)

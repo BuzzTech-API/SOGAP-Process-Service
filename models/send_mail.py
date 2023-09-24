@@ -18,7 +18,7 @@ content = {"Email enviado com sucesso!"}
 
 conf = ConnectionConfig(
     MAIL_USERNAME = credentials['EMAIL'],
-    MAIL_PASSWORD = credentials['PASS'], #Senha de app dentro de Segurança/Verificação em duas etapas
+    MAIL_PASSWORD = 'apzh jhqd pzrk jivt', #Senha de app dentro de Segurança/Verificação em duas etapas
     MAIL_FROM = credentials['EMAIL'],
     MAIL_PORT = 465,
     MAIL_SERVER = "smtp.gmail.com",

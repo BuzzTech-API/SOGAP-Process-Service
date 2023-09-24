@@ -4,11 +4,15 @@ from sqlalchemy.orm import Session
 from models import user_crud, oauth2
 from database.database import get_db, engine
 from typing import List, Annotated
+from passlib.context import CryptContext
 
 router = APIRouter(tags=["Users"])
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 ## Rotas que trabalham o usuario
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
 
 def create_admin():
@@ -18,7 +22,7 @@ def create_admin():
             db_user = user_crud.User(
                 email="adm@adm",
                 name="administrador",
-                password="adm",
+                password=pwd_context.hash('adm'),
                 role="Administrador",
                 team="Administrador",
                 is_active=True,
@@ -81,6 +85,7 @@ def create_user(
     db_user = user_crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
+    user.password=pwd_context.hash(user.password)
     return user_crud.create_user(db=db, user=user)
 
 
