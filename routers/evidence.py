@@ -16,7 +16,7 @@ router = APIRouter(tags=["Evidences"])
 
 
 @router.get("/evidences/{id}", response_model=Optional[schemas.Evidence])
-def get_evidence(
+async def get_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     id: int,
     db: Session = Depends(get_db),
@@ -25,8 +25,8 @@ def get_evidence(
     return evidence_crud.get_evidence(id=id, db=db)
 
 
-@router.get("/evidences/", response_model=Optional[list[schemas.Evidence]])
-def get_all_evidence(
+@router.get("/evidences", response_model=Optional[list[schemas.Evidence]])
+async def get_all_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     db: Session = Depends(get_db),
 ):
@@ -35,7 +35,7 @@ def get_all_evidence(
 
 
 @router.post("/evidences/", response_model=Optional[schemas.Evidence])
-def create_evidence(
+async def create_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     evidence: schemas.EvidenceCreate,
     db: Session = Depends(get_db),
@@ -46,7 +46,7 @@ def create_evidence(
 
 
 @router.put("/evidences/", response_model=Optional[schemas.Evidence])
-def update_evidence(
+async def update_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     evidence: schemas.Evidence,
     db: Session = Depends(get_db),
@@ -56,7 +56,7 @@ def update_evidence(
 
 
 @router.delete("/evidences/{id}")
-def delete_evidence(
+async def delete_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     id: int,
     db: Session = Depends(get_db),
@@ -64,7 +64,7 @@ def delete_evidence(
     """Rota para deletar uma evidencia pelo id"""
     return evidence_crud.delete_evidence(id=id, db=db)
 
-@router.post("/uploadfile/{emails}")
+@router.post("/uploadfile/{emails}/")
 async def create_upload_file(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     emails: str,

@@ -12,7 +12,7 @@ router = APIRouter(tags=["Processes"])
 
 
 @router.get("/processes/{id}", response_model=Optional[schemas.ProcessAll])
-def get_process(
+async def get_process(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     id: int,
     db: Session = Depends(get_db),
@@ -21,8 +21,8 @@ def get_process(
     return process_crud.get_process(id=id, db=db)
 
 
-@router.get("/processes/", response_model=Optional[list[schemas.ProcessAll]])
-def get_process_all(
+@router.get("/processes", response_model=Optional[list[schemas.ProcessAll]])
+async def get_process_all(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     db: Session = Depends(get_db),
 ):
@@ -31,7 +31,7 @@ def get_process_all(
 
 
 @router.post("/processes/", response_model=Optional[schemas.Process])
-def create_process(
+async def create_process(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     process: schemas.ProcessCreate,
     db: Session = Depends(get_db),
@@ -41,7 +41,7 @@ def create_process(
 
 
 @router.put("/processes/", response_model=Optional[schemas.Process])
-def update_process(
+async def update_process(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     process: schemas.ProcessUpdate,
     db: Session = Depends(get_db),
@@ -51,7 +51,7 @@ def update_process(
 
 
 @router.delete("/processes/{id}")
-def delete_process(
+async def delete_process(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     id: int,
     db: Session = Depends(get_db),

@@ -35,7 +35,7 @@ def create_admin():
 
 
 @router.get("/users/{id}", response_model=schemas.UserGet)
-def get_user(
+async def get_user(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     id: int,
     db: Session = Depends(get_db),
@@ -50,8 +50,8 @@ def get_user(
     return user
 
 
-@router.get("/users/", response_model=List[schemas.User])
-def get_all_users(
+@router.get("/users", response_model=List[schemas.User])
+async def get_all_users(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     db: Session = Depends(get_db),
 ):
@@ -74,7 +74,7 @@ async def read_users_me(
 
 
 @router.post("/users/", response_model=schemas.User)
-def create_user(
+async def create_user(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     user: schemas.UserCreate,
     db: Session = Depends(get_db),
@@ -90,7 +90,7 @@ def create_user(
 
 
 @router.put("/users/", response_model=schemas.User)
-def update_user(
+async def update_user(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     user: schemas.User,
     db: Session = Depends(get_db),
@@ -105,7 +105,7 @@ def update_user(
 
 
 @router.delete("/users/{id}")
-def delete_user(
+async def delete_user(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     id: int,
     db: Session = Depends(get_db),

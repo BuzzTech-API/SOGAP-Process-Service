@@ -12,7 +12,7 @@ router = APIRouter(tags=["Steps"])
 
 
 @router.get("/steps/{id}", response_model=Optional[schemas.StepForProcess])
-def get_step(
+async def get_step(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     id: int,
     db: Session = Depends(get_db),
@@ -20,8 +20,8 @@ def get_step(
     """Rota para buscar etapa pelo id"""
     return step_crud.get_step(id=id, db=db)
 
-@router.get("/steps/", response_model=Optional[list[schemas.StepForProcess]])
-def get_all_step(
+@router.get("/steps", response_model=Optional[list[schemas.StepForProcess]])
+async def get_all_step(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     db: Session = Depends(get_db),
 ):
@@ -30,7 +30,7 @@ def get_all_step(
 
 
 @router.post("/steps/", response_model=Optional[schemas.StepForProcess])
-def create_step(
+async def create_step(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     step: schemas.StepCreate,
     db: Session = Depends(get_db),
@@ -40,7 +40,7 @@ def create_step(
 
 
 @router.put("/steps/", response_model=Optional[schemas.Step])
-def update_step(
+async def update_step(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     step: schemas.Step,
     db: Session = Depends(get_db),
@@ -50,7 +50,7 @@ def update_step(
 
 
 @router.delete("/steps/{id}")
-def delete_step(
+async def delete_step(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     id: int,
     db: Session = Depends(get_db),

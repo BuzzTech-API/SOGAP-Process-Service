@@ -12,7 +12,7 @@ router = APIRouter(tags=["User_Steps"])
 
 
 @router.get("/stepes_users/{user_id}/{step_id}", response_model=Optional[schemas.UserStep])
-def get_user_step(
+async def get_user_step(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     user_id:int,
     step_id:int,
@@ -23,8 +23,8 @@ def get_user_step(
         user_id=user_id, step_id=step_id, db=db
     )
 
-@router.get("/stepes_users/", response_model=Optional[list[schemas.UserStep]])
-def get_all_user_step(
+@router.get("/stepes_users", response_model=Optional[list[schemas.UserStep]])
+async def get_all_user_step(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     db: Session = Depends(get_db),
 ):
@@ -34,7 +34,7 @@ def get_all_user_step(
     )
 
 @router.get("/stepes_users/user_id/{user_id}", response_model=Optional[list[schemas.UserStep]])
-def get_all_user_step_by_user_id(
+async def get_all_user_step_by_user_id(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     user_id: int,
     db: Session = Depends(get_db),
@@ -46,7 +46,7 @@ def get_all_user_step_by_user_id(
     )
 
 @router.get("/stepes_users/step_id/{step_id}", response_model=list[schemas.UserStep])
-def get_all_user_step_by_step_id(
+async def get_all_user_step_by_step_id(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     step_id: int,
     db: Session = Depends(get_db),
@@ -57,19 +57,10 @@ def get_all_user_step_by_step_id(
         db=db
     )
 
-@router.get("/stepes_users/", response_model=Optional[list[schemas.UserStep]])
-def get_all_user_step(
-    current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
-    db: Session = Depends(get_db),
-):
-    """Rota para buscar todas relação etapa-usuario"""
-    return user_step_crud.get_all_user_step(
-        db=db
-    )
 
 
 @router.post("/stepes_users/", response_model=Optional[schemas.UserStep])
-def create_user_step(
+async def create_user_step(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     user_step: schemas.UserStepCreate,
     db: Session = Depends(get_db),
@@ -79,7 +70,7 @@ def create_user_step(
 
 
 @router.delete("/stepes_users/")
-def delete_user_step(
+async def delete_user_step(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     step_user: schemas.UserStepCreate,
     db: Session = Depends(get_db),

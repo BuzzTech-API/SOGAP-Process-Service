@@ -12,7 +12,7 @@ router = APIRouter(tags=["Request_For_Evidence"])
 
 
 @router.get("/request_for_evidence/{id}", response_model=Optional[schemas.RequestForEvidence])
-def get_request_for_evidence(
+async def get_request_for_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     id: int,
     db: Session = Depends(get_db),
@@ -20,8 +20,8 @@ def get_request_for_evidence(
     """Rota para buscar o pedido de evidencia pelo id"""
     return request_for_evidence_crud.get_request_for_evidence(id=id, db=db)
 
-@router.get("/request_for_evidence/", response_model=Optional[list[schemas.RequestForEvidence]])
-def get_all_request_for_evidence(
+@router.get("/request_for_evidence", response_model=Optional[list[schemas.RequestForEvidence]])
+async def get_all_request_for_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     db: Session = Depends(get_db),
 ):
@@ -30,7 +30,7 @@ def get_all_request_for_evidence(
 
 
 @router.post("/request_for_evidence/", response_model=Optional[schemas.RequestForEvidence])
-def create_request_for_evidence(
+async def create_request_for_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     request_for_evidence: schemas.RequestForEvidenceCreate,
     db: Session = Depends(get_db),
@@ -42,7 +42,7 @@ def create_request_for_evidence(
 
 
 @router.put("/request_for_evidence/", response_model=Optional[schemas.RequestForEvidence])
-def update_request_for_evidence(
+async def update_request_for_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     request_for_evidence: schemas.RequestForEvidence,
     db: Session = Depends(get_db),
@@ -54,7 +54,7 @@ def update_request_for_evidence(
 
 
 @router.delete("/request_for_evidence/{id}")
-def delete_request_for_evidence(
+async def delete_request_for_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     id: int,
     db: Session = Depends(get_db),

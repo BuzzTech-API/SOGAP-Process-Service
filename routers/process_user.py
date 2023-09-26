@@ -15,7 +15,7 @@ router = APIRouter(tags=["Processes_Users"])
     "/users_processes/{user_id:int}/{process_id:int}",
     response_model=Optional[schemas.ProcessUser],
 )
-def get_process_user(
+async def get_process_user(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     user_id:int,
     process_id:int,
@@ -33,10 +33,10 @@ def get_process_user(
 
 
 @router.get(
-    "/users_processes/",
+    "/users_processes",
     response_model=Optional[list[schemas.ProcessUser]],
 )
-def get_all_process_user(
+async def get_all_process_user(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     db: Session = Depends(get_db),
 ):
@@ -54,7 +54,7 @@ def get_all_process_user(
     "/users_processes/user_id/{user_id:int}",
     response_model=Optional[list[schemas.ProcessUser]],
 )
-def get_all_process_user_by_user_id(
+async def get_all_process_user_by_user_id(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     user_id: int,
     db: Session = Depends(get_db),
@@ -74,7 +74,7 @@ def get_all_process_user_by_user_id(
     "/users_processes/process_id/{process_id:int}",
     response_model=Optional[list[schemas.ProcessUser]],
 )
-def get_all_process_user_by_process_id(
+async def get_all_process_user_by_process_id(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     process_id: int,
     db: Session = Depends(get_db),
@@ -92,7 +92,7 @@ def get_all_process_user_by_process_id(
 
 
 @router.post("/users_processes/", response_model=Optional[schemas.ProcessUserCreate])
-def create_process_user(
+async def create_process_user(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     process_user: schemas.ProcessUserCreate,
     db: Session = Depends(get_db),
