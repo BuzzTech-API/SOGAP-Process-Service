@@ -1,5 +1,5 @@
 # Use uma imagem base do Python
-FROM python:3.10 AS builder
+FROM python:3.10-alpine AS builder
 
 # Define o diretório de trabalho dentro do contêiner
 
