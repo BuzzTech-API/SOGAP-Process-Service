@@ -42,7 +42,7 @@ async def create_step(
 @router.put("/steps/", response_model=Optional[schemas.Step])
 async def update_step(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
-    step: schemas.Step,
+    step: schemas.StepBase,
     db: Session = Depends(get_db),
 ):
     """Rota para alterar etapa pelo id"""
