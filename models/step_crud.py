@@ -54,9 +54,9 @@ def create_step(db: Session, step: schemas.StepCreate):
     return db_step
 
 
-def update_step(db: Session, step: schemas.Step):
+def update_step(db: Session, step: schemas.UpdateStep):
     """Se a etapa existir no banco realiza as alterações no banco e salva"""
-    db_step = db.query(Step).filter(Step.id == step.id).first()
+    db_step = db.query(Step).filter(Step.id == step.step_id).first()
 
     if db_step:
         db_step.name = step.name
