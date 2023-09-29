@@ -38,6 +38,17 @@ class RequestForEvidence(RequestForEvidenceBase):
         from_attributes = True
 
 
+class UpdateStep(BaseModel):
+    step_id: int
+    name: str
+    endDate: date
+    endingDate: date
+    process_id: int
+    objective: str
+    priority: str
+    order: int
+    is_active: bool
+
 class StepBase(BaseModel):
     name: str
     endDate: date
