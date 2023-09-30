@@ -19,7 +19,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 30
 router = APIRouter(tags=["Login"])
 
 
-@router.post("/login/")
+@router.post("/login")
 async def login(login: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     print(pwd_context.hash('adm'))
     user = user_crud.get_user_by_email(email=login.username, db=db)

@@ -101,11 +101,12 @@ async def create_process_user(
     return process_user_crud.create_process_user(db=db, process_user=process_user)
 
 
-@router.delete("/users_processes/{id}")
+@router.delete("/users_processes/", response_model=Optional[schemas.ProcessUserBase])
 def delete_process_user(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
-    id: int,
+    process_user: schemas.ProcessUserBase,
     db: Session = Depends(get_db),
 ):
     """Rota para deletar uma relação Usuario-Processo"""
-    return process_user_crud.delete_process_user(id=id, db=db)
+    print(process_user)
+    return process_user_crud.delete_process_user(db=db, user_id=process_user.user_id, process_id=process_user.process_id)

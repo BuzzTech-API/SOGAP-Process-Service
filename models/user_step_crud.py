@@ -19,7 +19,7 @@ def get_user_step_by_user_and_step_id(db: Session, user_id: int, step_id: int):
     """busca no banco pelo id do usuario e da etapa e a retorna"""
     return (
         db.query(UserStep)
-        .filter(UserStep.user_id == user_id and UserStep.step_id == step_id)
+        .filter((UserStep.user_id == user_id) & (UserStep.step_id == step_id))
         .first()
     )
 
@@ -52,7 +52,7 @@ def delete_user_step(db: Session, user_id: int, step_id: int):
     """Se existir a relação, ela é apagada da tabela"""
     db_user_step = (
         db.query(UserStep)
-        .filter(UserStep.user_id == user_id and UserStep.step_id == step_id)
+        .filter((UserStep.user_id == user_id) & (UserStep.step_id == step_id))
         .first()
     )
 
