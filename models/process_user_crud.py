@@ -20,7 +20,7 @@ def get_process_user_by_user_and_process_id(db: Session, user_id: int, process_i
     """Busca a relação de processo-usuario pelas suas chaves primarias e retorna a relação"""
     return (
         db.query(ProcessUser)
-        .filter(ProcessUser.user_id == user_id and ProcessUser.process_id == process_id)
+        .filter((ProcessUser.user_id == user_id) & (ProcessUser.process_id == process_id))
         .first()
     )
 
@@ -72,9 +72,10 @@ def create_process_user(db: Session, process_user: schemas.ProcessUserCreate):
 
 def delete_process_user(db: Session, user_id: int, process_id: int):
     """Se a relação existir, deleta a relação do banco"""
+    
     db_process_user = (
         db.query(ProcessUser)
-        .filter(ProcessUser.user_id == user_id and ProcessUser.process_id == process_id)
+        .filter((ProcessUser.user_id == user_id) & (ProcessUser.process_id == process_id))
         .first()
     )
 
