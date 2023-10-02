@@ -73,6 +73,7 @@ def update_request_for_evidence(
         db_request_for_evidence.evidenceValidationDate = (
             request_for_evidence.evidenceValidationDate
         )
+        db_request_for_evidence.deliveryDate = request_for_evidence.deliveryDate
         db_request_for_evidence.is_validated = request_for_evidence.is_validated
         db_request_for_evidence.is_actived = request_for_evidence.is_actived
 
