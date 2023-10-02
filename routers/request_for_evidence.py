@@ -41,10 +41,10 @@ async def create_request_for_evidence(
     )
 
 
-@router.put("/request_for_evidence/", response_model=Optional[schemas.RequestForEvidence])
+@router.put("/request_for_evidence/", response_model=Optional[schemas.UpdateRequestForEvidence])
 async def update_request_for_evidence(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
-    request_for_evidence: schemas.RequestForEvidence,
+    request_for_evidence: schemas.UpdateRequestForEvidence,
     db: Session = Depends(get_db),
 ):
     """Rota para alterar o pedido de evidencia pelo id"""
