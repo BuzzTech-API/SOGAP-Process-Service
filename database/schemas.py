@@ -16,6 +16,16 @@ class Evidence(EvidenceBase):
     class Config:
         from_attributes = True
 
+class UpdateRequestForEvidence(BaseModel):
+    requiredDocument: str
+    description: str
+    step_id: int
+    user_id: int
+    evidenceValidationDate: date
+    deliveryDate: date
+    is_validated: bool
+    is_actived: bool
+    id: int
 
 class RequestForEvidenceBase(BaseModel):
     requiredDocument: str
