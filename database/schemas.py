@@ -108,6 +108,9 @@ class Process(ProcessBase):
     class Config:
         from_attributes = True
 
+class DeleteProcess(BaseModel):
+    id: int
+    is_active: bool
 
 
 class UserBase(BaseModel):
