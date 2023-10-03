@@ -49,6 +49,14 @@ async def update_process(
     """Rota para alterar processo pelo id"""
     return process_crud.update_process(process=process, db=db)
 
+@router.put("/processes/delete", response_model=Optional[schemas.DeleteProcess])
+async def delete_process(
+    current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
+    deleteProcess: schemas.DeleteProcess,
+    db: Session = Depends(get_db),
+):
+    """Rota para fazer o delete lógico"""
+    return process_crud.delete_process(db=db, id=deleteProcess.id, is_active=deleteProcess.is_active)
 
 @router.delete("/processes/{id}")
 async def delete_process(
