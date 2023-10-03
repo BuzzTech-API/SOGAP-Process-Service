@@ -80,12 +80,14 @@ def update_process(db: Session, process: schemas.Process):
     return db_process
 
 
-def delete_process(db: Session, id: int):
+def delete_process(db: Session, id: int, is_active: Boolean):
     """Se existir, deleta o processo no banco pelo o id dele"""
     db_process = db.query(Process).filter(Process.id == id).first()
 
     if db_process:
-        db.delete(db_process)
+        db_process.is_active = is_active
+
         db.commit()
+        db.refresh(db_process)
 
     return db_process
