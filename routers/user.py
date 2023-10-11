@@ -49,6 +49,18 @@ async def get_user(
 
     return user
 
+@router.get("/user/getall_related_data/{user_id}")
+async def get_user(
+    current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
+    user_id: int,
+    db: Session = Depends(get_db),
+):
+    """Você coloca o id do usuario e te retorna um json contendo todos seus dados e processos e etapas
+    que ele está responsável e caso ele não exista lança um exceção http falando que ele não existe
+    """
+
+    return user_crud.get_user_related_data(db=db, user_id=user_id)
+
 
 @router.get("/users", response_model=List[schemas.User])
 async def get_all_users(
