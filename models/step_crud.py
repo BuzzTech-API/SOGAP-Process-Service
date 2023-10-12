@@ -15,7 +15,7 @@ class Step(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     name = Column(String(64))
-    objective= Column(String(200))
+    objective= Column(String(300))
     endingDate= Column(Date)
     endDate = Column(Date)
     process_id = Column(Integer, ForeignKey("process.id"))
