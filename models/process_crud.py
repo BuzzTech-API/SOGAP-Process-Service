@@ -4,6 +4,7 @@ from database import schemas
 from database.database import Base
 from sqlalchemy import Boolean, Column, Integer, String, Date
 from sqlalchemy.orm import relationship, Mapped
+from models import request_for_evidence_crud
 from models.step_crud import Step
 from models.process_user_crud import ProcessUser
 
@@ -37,7 +38,7 @@ def get_process(db: Session, id: int):
 
 def get_all_process(db: Session, skip: int = 0, limit: int = 100):
     """Busca todos os processos no banco limitando a busca a 100 por vez podendo paginar de 100 em 100"""
-    return db.query(Process).order_by(Process.id).offset(skip).limit(limit).all()
+    return db.query(Process).order_by(Process.id).where(Process.is_active==True and Step.is_active==True and request_for_evidence_crud.RequestForEvidence.is_actived == True).offset(skip).limit(limit).all()
 
 
 def create_process(db: Session, process: schemas.ProcessCreate):
