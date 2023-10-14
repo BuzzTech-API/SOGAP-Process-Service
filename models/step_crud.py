@@ -22,7 +22,7 @@ class Step(Base):
     priority = Column(String(20))
     order = Column(Integer)
     is_active = Column(Boolean, default=True)
-    requests = relationship(RequestForEvidence)
+    requests = relationship(RequestForEvidence, primaryjoin="and_(Step.id == RequestForEvidence.step_id, RequestForEvidence.is_actived == True)", viewonly=True)
     users: Mapped[List["UserStep"]] = relationship(back_populates="step")
 
 

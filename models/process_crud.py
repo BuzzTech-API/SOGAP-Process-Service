@@ -27,7 +27,7 @@ class Process(Base):
     is_active = Column(Boolean, default=True)
     priority = Column(String(60))
     status = Column(String(60))
-    steps = relationship(Step)
+    steps = relationship(Step, primaryjoin="and_(Process.id == Step.process_id, Step.is_active == True)", viewonly=True)
     users: Mapped[List["ProcessUser"]] = relationship(back_populates="process")
 
 
@@ -38,7 +38,7 @@ def get_process(db: Session, id: int):
 
 def get_all_process(db: Session, skip: int = 0, limit: int = 100):
     """Busca todos os processos no banco limitando a busca a 100 por vez podendo paginar de 100 em 100"""
-    return db.query(Process).order_by(Process.id).where(Process.is_active==True and Step.is_active==True and request_for_evidence_crud.RequestForEvidence.is_actived == True).offset(skip).limit(limit).all()
+    return db.query(Process).order_by(Process.id).where(Process.is_active==True).offset(skip).limit(limit).all()
 
 
 def create_process(db: Session, process: schemas.ProcessCreate):

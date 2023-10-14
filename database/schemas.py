@@ -17,6 +17,7 @@ class EvidenceCreate(EvidenceBase):
 
 class Evidence(EvidenceBase):
     id: int
+    is_active: bool
 
     class Config:
         from_attributes = True
