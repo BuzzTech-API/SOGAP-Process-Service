@@ -22,7 +22,7 @@ class RequestForEvidence(Base):
     deliveryDate = Column(Date)
     is_validated = Column(Boolean)
     is_actived = Column(Boolean, default=True)
-    evidences = relationship(Evidence)
+    evidences = relationship(Evidence, primaryjoin="and_(RequestForEvidence.id == Evidence.idRequestForEvidence, Evidence.is_active == True)", viewonly=True)
 
 
 def get_request_for_evidence(db: Session, id: int):

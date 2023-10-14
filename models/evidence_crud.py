@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from database import schemas
 from database.database import Base
-from sqlalchemy import Column, ForeignKey, Integer, String, Date
+from sqlalchemy import Column,Boolean, ForeignKey, Integer, String, Date
 
 
 class Evidence(Base):
@@ -10,9 +10,10 @@ class Evidence(Base):
     __tablename__ = "evidence"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    link = Column(String(80))
+    link = Column(String(150))
     idRequestForEvidence = Column(Integer, ForeignKey("request_for_evidence.id"))
     deliveryDate = Column(Date)
+    is_active = Column(Boolean, default=True)
 
 
 def get_evidence(db: Session, id: int):
@@ -46,6 +47,7 @@ def update_evidence(db: Session, evidence: schemas.Evidence):
         db_evidence.link = evidence.link
         db_evidence.idRequestForEvidence = evidence.idRequestForEvidence
         db_evidence.deliveryDate = evidence.deliveryDate
+        db_evidence.is_active = evidence.is_active
 
         db.commit()
         db.refresh(db_evidence)
