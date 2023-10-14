@@ -2,6 +2,11 @@ from pydantic import BaseModel
 from datetime import date
 from typing import List
 
+
+class VerificationCode(BaseModel):
+    verification_code: str
+    email: str
+
 class EvidenceBase(BaseModel):
     link: str
     idRequestForEvidence: int
@@ -131,9 +136,6 @@ class User(UserBase):
         from_attributes = True
 
 
-
-
-
 class ProcessUserBase(BaseModel):
     user_id: int
     process_id: int
@@ -190,14 +192,6 @@ class ProcessAll(ProcessBase):
 
     class Config:
         from_attributes = True
-
-
-
-
-
-
-
-
 
 class UserGet(UserBase):
     id: int

@@ -21,6 +21,7 @@ REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 2 # 2 days
 ALGORITHM = "HS256"
 JWT_SECRET_KEY = config_env['JWT_SECRET_KEY']   # should be kept secret
 JWT_REFRESH_SECRET_KEY = config_env['JWT_REFRESH_SECRET_KEY']   # should be kept secret
+JWT_LOGIN_SECRET_KEY = config_env['JWT_LOGIN_SECRET_KEY']
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
@@ -93,3 +94,37 @@ def refresh_token(token: str, credentials_exception, db):
         data={"sub": user.email}
     )
     return {"access_token": access_token, "refresh_token":refresh_token, "token_type": "bearer"}
+
+def create_login_token(data: dict, expires_delta: int = None):
+    to_encode = data.copy()
+    if expires_delta is not None:
+        expires_delta = datetime.utcnow() + expires_delta
+    else:
+        expires_delta = datetime.utcnow() + timedelta(minutes=30)
+    to_encode.update({"exp": expires_delta})
+    encoded_jwt = jwt.encode(to_encode, JWT_LOGIN_SECRET_KEY, ALGORITHM)
+    return encoded_jwt
+
+def verify_login_token(token: str, credentials_exception, db):
+    """Verifica se aquele token é verdadeiro"""
+    try:
+        payload = jwt.decode(token, JWT_LOGIN_SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get('sub')
+        if email is None:
+            raise credentials_exception
+        if datetime.fromtimestamp(payload.get('exp')) < datetime.now():
+            raise HTTPException(
+                status_code = status.HTTP_401_UNAUTHORIZED,
+                detail="Token expired",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except JWTError:
+        raise credentials_exception
+    user = user_crud.get_user_by_email(db=db, email=email)
+    if user is None:
+        raise credentials_exception
+    
+    access_token = JWTtoken.create_access_token(
+        data={"sub": user.email}
+    )
+    return {"login_token": access_token}

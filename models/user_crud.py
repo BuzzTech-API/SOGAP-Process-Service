@@ -20,6 +20,8 @@ class User(Base):
     name = Column(String(60))
     email = Column(String(64), unique=True, index=True)
     password = Column(String(64))
+    is_2fa_enable = Column(Boolean, default=False) # Chave booleana para sabe se a autenticação em 2 fatores está habilitada
+    secret_key_2fa = Column(String, nullable=True) # Chave secreta gerada para o usuário
     role = Column(String(60))
     team = Column(String(60))
     is_active = Column(Boolean, default=True)
@@ -28,6 +30,19 @@ class User(Base):
     )
     steps: Mapped[List[user_step_crud.UserStep]] = relationship(back_populates="user")
 
+#Função para pegar a chave secreta no banco através do ID do usuario.
+def get_secret_key(db: Session, email: str):
+    user = db.query(User).filter(User.email == email).first()
+    if user:
+        return user.secret_key_2fa
+    return None
+
+#Função para salvar a chave secreta no banco através do ID do usuario.
+def save_secret_key(db: Session, id:int, secret_key: str):
+    user = db.query(User).filter(User.id == id).first()
+    if user:
+        user.secret_key_2fa = secret_key
+        db.commit()
 
 def get_user(db: Session, id: int):
     """Recebe uma sessão do banco e id e realiza a busca no banco, retornando esse usuário"""
@@ -50,6 +65,8 @@ def create_user(db: Session, user: schemas.UserCreate):
         email=user.email,
         name=user.name,
         password=user.password,
+        is_2fa_enable =user.is_2fa_enable,
+        secret_key_2fa = user.secret_key_2fa,
         role=user.role,
         team=user.team,
         is_active=user.is_active,
@@ -68,10 +85,10 @@ def update_user(db: Session, user: schemas.User):
         db_user.email = user.email
         db_user.name = user.name
         db_user.password = user.password
+        db_user.is_2fa_enable =user.is_2fa_enable
         db_user.cargo = user.cargo
         db_user.team = user.team
         db_user.is_active = user.is_active
-
         db.commit()
         db.refresh(db_user)
 
