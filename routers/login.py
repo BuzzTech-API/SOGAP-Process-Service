@@ -40,14 +40,6 @@ async def login(login: OAuth2PasswordRequestForm = Depends(), db: Session = Depe
         data={'sub': user.email}
         )
         return {"login_token": login_token,"is_enabled2fa": True}
-        #     verification_code = login.verification_code
-        #     print(verification_code)     
-        #     secret_key = db.get_secret_key(user.id)
-
-        # if not verify_2fa(secret_key, verification_code):
-        #     raise HTTPException(
-        #         status_code=status.HTTP_400_BAD_REQUEST, detail="Código 2FA inválido."
-        #     )
           
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = JWTtoken.create_access_token(

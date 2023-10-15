@@ -100,7 +100,7 @@ def create_login_token(data: dict, expires_delta: int = None):
     if expires_delta is not None:
         expires_delta = datetime.utcnow() + expires_delta
     else:
-        expires_delta = datetime.utcnow() + timedelta(minutes=30)
+        expires_delta = datetime.utcnow() + timedelta(minutes=3)
     to_encode.update({"exp": expires_delta})
     encoded_jwt = jwt.encode(to_encode, JWT_LOGIN_SECRET_KEY, ALGORITHM)
     return encoded_jwt
@@ -123,8 +123,4 @@ def verify_login_token(token: str, credentials_exception, db):
     user = user_crud.get_user_by_email(db=db, email=email)
     if user is None:
         raise credentials_exception
-    
-    access_token = JWTtoken.create_access_token(
-        data={"sub": user.email}
-    )
-    return {"login_token": access_token}
+    return user

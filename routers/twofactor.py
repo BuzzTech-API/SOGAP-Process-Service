@@ -36,14 +36,14 @@ def generate_base32_key(input_string):
 
 # Rota para habilitar o 2FA
 @router.post("/enable-2fa")
-def enable_2fa(id: int, db: Session = Depends(get_db)):
+def enable_2fa( current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)], db: Session = Depends(get_db)):
     # Aqui geramos uma chave secreta para o usuário em formato QR code base32
-    user = user_crud.get_user(id=id, db=db)
+    user = current_user
 
     secret_key = OTP_KEY + user.email
     print(secret_key)
 
-    user_crud.save_secret_key(id=id, db=db, secret_key=secret_key)
+    user_crud.save_secret_key(id=user.id, db=db, secret_key=secret_key)
     # Aqui criamos uma URI para o código QR
     uri = pyotp.totp.TOTP(generate_base32_key(secret_key)).provisioning_uri(
         name= user.name,
@@ -59,10 +59,8 @@ def enable_2fa(id: int, db: Session = Depends(get_db)):
 # Rota para verificar o código 2FA
 @router.post("/verify-2fa")
 def verify_2fa(current_user: Annotated[schemas.User, Depends(oauth2.get_current_user_login)], verification_code: schemas.VerificationCode, db: Session = Depends(get_db)):
-    print(current_user)
-    secret_key = user_crud.get_secret_key(db, verification_code.email)
+    secret_key = user_crud.get_secret_key(db, current_user.email)
     if secret_key:
-        print("Entrei no Secret")
         totp = pyotp.TOTP(generate_base32_key(secret_key))
         print(generate_base32_key(secret_key))
 
@@ -70,14 +68,28 @@ def verify_2fa(current_user: Annotated[schemas.User, Depends(oauth2.get_current_
             print("Entrei no Verify")
             access_token_expires = timedelta(minutes=30)
             access_token = JWTtoken.create_access_token(
-            data={"sub": verification_code.email}, expires_delta=access_token_expires
+            data={"sub": current_user.email}, expires_delta=access_token_expires
         )
             refresh_token = JWTtoken.create_refresh_token(
-            data={"sub": verification_code.email}
+            data={"sub": current_user.email}
         )
 
             return {"access_token": access_token, "refresh_token":refresh_token, "token_type": "bearer"}
 
+        else:
+            # O código 2FA é inválido, então retorne uma exceção HTTP
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Código 2FA inválido. Acesso negado."
+                )
+        
+@router.post("/verify-2fa-First-Auth")
+def verify_2fa_First_Auth(current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)], verification_code: schemas.VerificationCode, db: Session = Depends(get_db)):
+    secret_key = user_crud.get_secret_key(db, current_user.email)
+    if secret_key:
+        totp = pyotp.TOTP(generate_base32_key(secret_key))
+        if totp.verify(verification_code.verification_code) == True:
+            return {"verify": True}
         else:
             # O código 2FA é inválido, então retorne uma exceção HTTP
             raise HTTPException(

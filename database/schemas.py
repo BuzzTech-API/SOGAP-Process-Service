@@ -5,7 +5,6 @@ from typing import List
 
 class VerificationCode(BaseModel):
     verification_code: str
-    email: str
 
 class EvidenceBase(BaseModel):
     link: str
