@@ -117,6 +117,14 @@ class DeleteProcess(BaseModel):
     id: int
     is_active: bool
 
+class DeleteStep(BaseModel):
+    id: int
+    is_active: bool
+
+class DeleteRequest(BaseModel):
+    id: int
+    is_active: bool
+
 
 class UserBase(BaseModel):
     name: str

@@ -49,17 +49,16 @@ async def get_user(
 
     return user
 
-@router.get("/user/getall_related_data/{user_id}")
+@router.get("/user/getall_related_data/")
 async def get_related(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
-    user_id: int,
     db: Session = Depends(get_db),
 ):
     """Você coloca o id do usuario e te retorna um json contendo todos seus dados e processos e etapas
     que ele está responsável e caso ele não exista lança um exceção http falando que ele não existe
     """
 
-    return user_crud.get_user_related_data(db=db, user_id=user_id)
+    return user_crud.get_user_related_data(db=db, user_id=current_user.id)
 
 
 @router.get("/users", response_model=List[schemas.User])

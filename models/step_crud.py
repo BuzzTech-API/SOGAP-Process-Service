@@ -83,3 +83,13 @@ def delete_step(db: Session, id: int):
         db.commit()
 
     return db_step
+
+def logical_delete_step(db: Session, id: int):
+    """Se a etapa existir, ela é deleta pelo id dela"""
+    db_step = db.query(Step).filter(Step.id == id).first()
+
+    if db_step:
+        db_step.is_active=False
+        db.commit()
+
+    return db_step

@@ -9,6 +9,7 @@ from models.step_crud import Step
 from models.process_user_crud import ProcessUser
 
 
+
 class Process(Base):
     """Classe que trabalha a tabela de processos no banco
     com atributos que mostra todas as etapas cadastrado no prcesso
@@ -20,14 +21,19 @@ class Process(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     title = Column(String(60))
     description = Column(String(300))
-    objective= Column(String(200))
+    objective = Column(String(200))
     endingDate = Column(Date)
     createDate = Column(Date)
     lastUpdate = Column(Date)
     is_active = Column(Boolean, default=True)
     priority = Column(String(60))
     status = Column(String(60))
-    steps = relationship(Step, primaryjoin="and_(Process.id == Step.process_id, Step.is_active == True)", viewonly=True)
+    steps = relationship(
+        Step,
+        primaryjoin="and_(Process.id == Step.process_id, Step.is_active == True)",
+        order_by=Step.order,
+        viewonly=True,
+    )
     users: Mapped[List["ProcessUser"]] = relationship(back_populates="process")
 
 
@@ -38,15 +44,22 @@ def get_process(db: Session, id: int):
 
 def get_all_process(db: Session, skip: int = 0, limit: int = 100):
     """Busca todos os processos no banco limitando a busca a 100 por vez podendo paginar de 100 em 100"""
-    return db.query(Process).order_by(Process.id).where(Process.is_active==True).offset(skip).limit(limit).all()
+    return (
+        db.query(Process)
+        .order_by(Process.id)
+        .where(Process.is_active == True)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
 
 
 def create_process(db: Session, process: schemas.ProcessCreate):
     """Cria um novo processo no banco"""
     db_process = Process(
         title=process.title,
-        description= process.description,
-        objective = process.objective,
+        description=process.description,
+        objective=process.objective,
         endingDate=process.endingDate,
         createDate=process.createDate,
         lastUpdate=process.lastUpdate,

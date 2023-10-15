@@ -73,7 +73,7 @@ async def invalidate_evidence(
     """Rota para deletar uma evidencia pelo id"""
     return evidence_crud.invalidate_evidence(id=id, db=db)
 
-@router.post("/uploadfile/{emails}/")
+@router.post("/uploadfile/{emails}")
 async def create_upload_file(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     emails: str,
@@ -84,7 +84,6 @@ async def create_upload_file(
     try:
         
         link = await gcs.GCStorage().upload_file(file) #chama a função que o upload do arquivo para a nuvem
-
         
         lista_emails = emails.split('&') #pega a string vindo do frontend, separa os emails e adciona em uma lista
         lista_email_limpa = []
@@ -108,8 +107,8 @@ async def create_upload_file(
 
         fm = FastMail(send_mail.conf) #função que envia os emails
         await fm.send_message(message)
-    
-
+        
+        
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     

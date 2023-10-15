@@ -57,3 +57,13 @@ async def delete_step(
 ):
     """Rota para deletar etapa pelo id"""
     return step_crud.delete_step(id=id, db=db)
+
+
+@router.delete("/steps/delete/")
+async def logical_delete_step(
+    current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
+    step: schemas.DeleteStep,
+    db: Session = Depends(get_db),
+):
+    """Rota para deletar etapa pelo id"""
+    return step_crud.logical_delete_step(id=step.id, db=db)

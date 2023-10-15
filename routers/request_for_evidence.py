@@ -52,6 +52,17 @@ async def update_request_for_evidence(
         request_for_evidence=request_for_evidence, db=db
     )
 
+@router.put("/request_for_evidence/delete/", response_model=Optional[schemas.RequestForEvidence])
+async def logical_delete_request_for_evidence(
+    current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
+    request_for_evidence: schemas.DeleteRequest,
+    db: Session = Depends(get_db),
+):
+    """Rota para alterar o pedido de evidencia pelo id"""
+    return request_for_evidence_crud.logical_delete_request_for_evidence(
+        id=request_for_evidence.id, db=db, is_active=request_for_evidence.is_active
+    )
+
 
 @router.delete("/request_for_evidence/{id}")
 async def delete_request_for_evidence(
