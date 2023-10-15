@@ -7,6 +7,8 @@ from typing import Annotated, List
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from datetime import datetime, timedelta
 from passlib.context import CryptContext
+from .twofactor import verify_2fa
+import pyotp #Importando a biblioteca PyOTP para autenticação em 2 fatores
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -31,6 +33,14 @@ async def login(login: OAuth2PasswordRequestForm = Depends(), db: Session = Depe
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=f"Invalid Credentials"
         )
+    
+    # Aqui é a verificação 2FA
+    if user.is_2fa_enable:
+        login_token = JWTtoken.create_login_token(
+        data={'sub': user.email}
+        )
+        return {"login_token": login_token,"is_enabled2fa": True}
+          
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = JWTtoken.create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires

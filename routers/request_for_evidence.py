@@ -61,3 +61,12 @@ async def delete_request_for_evidence(
 ):
     """Rota para deletar o pedido de evidencia pelo id"""
     return request_for_evidence_crud.delete_request_for_evidence(id=id, db=db)
+
+@router.put("/request_for_evidence/validate/{id}")
+async def validate_evidence(
+    current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
+    id: int,
+    db: Session = Depends(get_db),
+):
+    """Rota para deletar o pedido de evidencia pelo id"""
+    return request_for_evidence_crud.validate_evidece(id=id, db=db)

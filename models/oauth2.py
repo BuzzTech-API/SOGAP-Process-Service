@@ -12,6 +12,20 @@ from sqlalchemy.orm import Session
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
+async def get_current_user_login(
+    token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)
+):
+    """Pega o usuario atual"""
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+
+    return JWTtoken.verify_login_token(
+        token=token, credentials_exception=credentials_exception, db=db
+    )
+
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)], db: Session = Depends(get_db)
 ):
