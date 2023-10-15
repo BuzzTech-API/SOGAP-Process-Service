@@ -42,7 +42,20 @@ def save_secret_key(db: Session, id:int, secret_key: str):
     user = db.query(User).filter(User.id == id).first()
     if user:
         user.secret_key_2fa = secret_key
-        user.is_2fa_enable= True
+        db.commit()
+        db.refresh(user)
+
+def enable_2fa_first_auth(db: Session, id:int):
+    user = db.query(User).filter(User.id == id).first()
+    if user:
+        user.is_2fa_enable=True
+        db.commit()
+        db.refresh(user)
+
+def disable_2fa(db: Session, id:int):
+    user = db.query(User).filter(User.id == id).first()
+    if user:
+        user.is_2fa_enable=False
         db.commit()
         db.refresh(user)
 

@@ -50,7 +50,7 @@ async def get_user(
     return user
 
 @router.get("/user/getall_related_data/{user_id}")
-async def get_user(
+async def get_related(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     user_id: int,
     db: Session = Depends(get_db),
