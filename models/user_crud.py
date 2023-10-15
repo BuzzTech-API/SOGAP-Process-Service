@@ -44,6 +44,7 @@ def save_secret_key(db: Session, id:int, secret_key: str):
         user.secret_key_2fa = secret_key
         user.is_2fa_enable= True
         db.commit()
+        db.refresh(user)
 
 def get_user(db: Session, id: int):
     """Recebe uma sessão do banco e id e realiza a busca no banco, retornando esse usuário"""

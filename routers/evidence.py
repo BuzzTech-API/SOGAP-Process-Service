@@ -64,6 +64,15 @@ async def delete_evidence(
     """Rota para deletar uma evidencia pelo id"""
     return evidence_crud.delete_evidence(id=id, db=db)
 
+@router.put("/evidences/invalidate/{id}")
+async def invalidate_evidence(
+    current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
+    id: int,
+    db: Session = Depends(get_db),
+):
+    """Rota para deletar uma evidencia pelo id"""
+    return evidence_crud.invalidate_evidence(id=id, db=db)
+
 @router.post("/uploadfile/{emails}/")
 async def create_upload_file(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],

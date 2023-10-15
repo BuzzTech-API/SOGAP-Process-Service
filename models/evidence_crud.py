@@ -64,3 +64,13 @@ def delete_evidence(db: Session, id: int):
         db.commit()
 
     return db_evidence
+
+def invalidate_evidence(db: Session, id: int):
+    """Se a evidencia existir no banco é realizado a exclusão dela no banco pelo id dela"""
+    db_evidence = db.query(Evidence).filter(Evidence.id == id).first()
+
+    if db_evidence:
+        db_evidence.is_active=False
+        db.commit()
+
+    return db_evidence

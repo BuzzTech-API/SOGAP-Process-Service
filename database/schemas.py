@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import date
-from typing import List
+from typing import List, Optional
 
 
 class VerificationCode(BaseModel):
@@ -130,6 +130,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+    is_2fa_enable: Optional[bool]
     
 
     class Config:

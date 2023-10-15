@@ -41,7 +41,6 @@ def enable_2fa( current_user: Annotated[schemas.User, Depends(oauth2.get_current
     user = current_user
 
     secret_key = OTP_KEY + user.email
-    print(secret_key)
 
     user_crud.save_secret_key(id=user.id, db=db, secret_key=secret_key)
     # Aqui criamos uma URI para o código QR
