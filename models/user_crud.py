@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from database import schemas
 from database.database import Base, get_db
@@ -119,3 +120,86 @@ def delete_user(db: Session, id: int):
         db.commit()
 
     return db_user
+
+def get_user_related_data(db: Session, user_id: int):
+    user = get_user(db, user_id)
+    
+    if not user:
+        raise HTTPException(status_code=404, detail="Esse usuário não existe")
+    
+    processes_list = []
+    steps_list = []
+    requests_list = []
+
+    for process_user in user.processes:
+        process = process_user.process
+
+        processes_dict = {
+            'title': process.title,
+            'description': process.description,
+            'objective': process.objective,
+            'endingDate': process.endingDate.isoformat(),
+            'createDate': process.createDate.isoformat(),
+            'lastUpdate': process.lastUpdate.isoformat(),
+            'is_active': process.is_active,
+            'priority': process.priority,
+            'status': process.status,
+            'id': process.id,
+            }
+        
+        processes_list.append(processes_dict)
+
+    for user_step in user.steps:
+        step = user_step.step
+
+
+        steps_dict = {
+            'name': step.name,
+            'endDate': step.endDate.isoformat(),
+            'endingDate': step.endingDate.isoformat(),
+            'process_id': step.process_id,
+            'objective': step.objective,
+            'priority': step.priority,
+            'order': step.order,
+            'is_active': step.is_active,
+            'id': step.id
+        }
+        steps_list.append(steps_dict)
+
+        for request in step.requests:
+            if request.user_id == user.id:
+                evidences_list = []
+                for evidence in request.evidences:
+                    evidences_dict = {
+                        'link': evidence.link,
+                        'idRequestForEvidence': evidence.idRequestForEvidence,
+                        'deliveryDate': evidence.deliveryDate.isoformat(),
+                        'id': evidence.id
+                    }
+                    evidences_list.append(evidences_dict)
+
+
+                requests_dict = {
+                    'requiredDocument': request.requiredDocument,
+                    'description': request.description,
+                    'step_id': request.step_id,
+                    'user_id': request.user_id,
+                    'evidenceValidationDate': request.evidenceValidationDate.isoformat(),
+                    'deliveryDate': request.deliveryDate.isoformat(),
+                    'is_validated': request.is_validated,
+                    'is_actived': request.is_actived,
+                    'id': request.id,
+                    'evidences': evidences_list
+                }
+                requests_list.append(requests_dict)
+            
+            else:
+                continue
+        
+
+    data = {"processes": processes_list,
+            "steps": steps_list,
+            "requests": requests_list}
+
+
+    return data
