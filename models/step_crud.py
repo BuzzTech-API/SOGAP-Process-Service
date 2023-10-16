@@ -24,6 +24,7 @@ class Step(Base):
     is_active = Column(Boolean, default=True)
     requests = relationship(RequestForEvidence, primaryjoin="and_(Step.id == RequestForEvidence.step_id, RequestForEvidence.is_actived == True)", viewonly=True)
     users: Mapped[List["UserStep"]] = relationship(back_populates="step")
+    process = relationship("Process")
 
 
 def get_step(db: Session, id: int):

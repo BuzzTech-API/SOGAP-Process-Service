@@ -5,7 +5,7 @@ from database.database import Base, get_db
 from sqlalchemy import Boolean, Column, Integer, String
 from sqlalchemy.orm import relationship, Mapped
 from typing import List
-from models import process_crud, step_crud, process_user_crud, user_step_crud
+from models import process_crud, step_crud, process_user_crud, user_step_crud, request_for_evidence_crud
 
 
 class User(Base):
@@ -30,6 +30,7 @@ class User(Base):
         back_populates="user"
     )
     steps: Mapped[List[user_step_crud.UserStep]] = relationship(back_populates="user")
+    requests = relationship(request_for_evidence_crud.RequestForEvidence)
 
 #Função para pegar a chave secreta no banco através do ID do usuario.
 def get_secret_key(db: Session, email: str):
@@ -133,7 +134,8 @@ def get_user_related_data(db: Session, user_id: int):
 
     for process_user in user.processes:
         process = process_user.process
-
+        if process.is_active ==False:
+            continue
         processes_dict = {
             'title': process.title,
             'description': process.description,
@@ -151,8 +153,23 @@ def get_user_related_data(db: Session, user_id: int):
 
     for user_step in user.steps:
         step = user_step.step
-
-
+        processes_dict = {
+            'title': step.process.title,
+            'description': step.process.description,
+            'objective': step.process.objective,
+            'endingDate': step.process.endingDate.isoformat(),
+            'createDate': step.process.createDate.isoformat(),
+            'lastUpdate': step.process.lastUpdate.isoformat(),
+            'is_active': step.process.is_active,
+            'priority': step.process.priority,
+            'status': step.process.status,
+            'id': step.process.id,
+            }
+        try:
+            processes_list.index(processes_dict)
+        except ValueError:    
+            processes_list.append(processes_dict)
+        
         steps_dict = {
             'name': step.name,
             'endDate': step.endDate.isoformat(),
@@ -166,35 +183,32 @@ def get_user_related_data(db: Session, user_id: int):
         }
         steps_list.append(steps_dict)
 
-        for request in step.requests:
-            if request.user_id == user.id:
-                evidences_list = []
-                for evidence in request.evidences:
-                    evidences_dict = {
-                        'link': evidence.link,
-                        'idRequestForEvidence': evidence.idRequestForEvidence,
-                        'deliveryDate': evidence.deliveryDate.isoformat(),
-                        'id': evidence.id
-                    }
-                    evidences_list.append(evidences_dict)
 
-
-                requests_dict = {
-                    'requiredDocument': request.requiredDocument,
-                    'description': request.description,
-                    'step_id': request.step_id,
-                    'user_id': request.user_id,
-                    'evidenceValidationDate': request.evidenceValidationDate.isoformat(),
-                    'deliveryDate': request.deliveryDate.isoformat(),
-                    'is_validated': request.is_validated,
-                    'is_actived': request.is_actived,
-                    'id': request.id,
-                    'evidences': evidences_list
+        for request in user.requests:
+            evidences_list = []
+            for evidence in request.evidences:
+                evidences_dict = {
+                    'link': evidence.link,
+                    'idRequestForEvidence': evidence.idRequestForEvidence,
+                    'deliveryDate': evidence.deliveryDate.isoformat(),
+                    'id': evidence.id
                 }
-                requests_list.append(requests_dict)
+                evidences_list.append(evidences_dict)
+            requests_dict = {
+                'requiredDocument': request.requiredDocument,
+                'description': request.description,
+                'step_id': request.step_id,
+                'user_id': request.user_id,
+                'evidenceValidationDate': request.evidenceValidationDate.isoformat(),
+                'deliveryDate': request.deliveryDate.isoformat(),
+                'is_validated': request.is_validated,
+                'is_actived': request.is_actived,
+                'id': request.id,
+                'evidences': evidences_list
+            }
+            requests_list.append(requests_dict)
             
-            else:
-                continue
+        
         
 
     data = {"processes": processes_list,
