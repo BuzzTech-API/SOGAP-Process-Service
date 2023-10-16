@@ -1,4 +1,4 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from database import schemas
 from sqlalchemy.orm import Session
 from models import evidence_crud, oauth2, gcs, send_mail
@@ -76,7 +76,6 @@ async def invalidate_evidence(
 @router.post("/uploadfile/{emails}")
 async def create_upload_file(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
-    backgroundTasks: BackgroundTasks,
     emails: str,
     file: UploadFile = File(...)
 ): 
@@ -107,7 +106,7 @@ async def create_upload_file(
             subtype=MessageType.html)
 
         fm = FastMail(send_mail.conf) #função que envia os emails
-        backgroundTasks.add_task(fm.send_message(message))
+        await fm.send_message(message)
         
         
     except Exception as e:
