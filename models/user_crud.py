@@ -132,59 +132,9 @@ def get_user_related_data(db: Session, user_id: int):
     steps_list = []
     requests_list = []
 
-    for process_user in user.processes:
-        process = process_user.process
-        if process.is_active ==False:
-            continue
-        processes_dict = {
-            'title': process.title,
-            'description': process.description,
-            'objective': process.objective,
-            'endingDate': process.endingDate.isoformat(),
-            'createDate': process.createDate.isoformat(),
-            'lastUpdate': process.lastUpdate.isoformat(),
-            'is_active': process.is_active,
-            'priority': process.priority,
-            'status': process.status,
-            'id': process.id,
-            }
-        
-        processes_list.append(processes_dict)
-
-    for user_step in user.steps:
-        step = user_step.step
-        processes_dict = {
-            'title': step.process.title,
-            'description': step.process.description,
-            'objective': step.process.objective,
-            'endingDate': step.process.endingDate.isoformat(),
-            'createDate': step.process.createDate.isoformat(),
-            'lastUpdate': step.process.lastUpdate.isoformat(),
-            'is_active': step.process.is_active,
-            'priority': step.process.priority,
-            'status': step.process.status,
-            'id': step.process.id,
-            }
-        try:
-            processes_list.index(processes_dict)
-        except ValueError:    
-            processes_list.append(processes_dict)
-        
-        steps_dict = {
-            'name': step.name,
-            'endDate': step.endDate.isoformat(),
-            'endingDate': step.endingDate.isoformat(),
-            'process_id': step.process_id,
-            'objective': step.objective,
-            'priority': step.priority,
-            'order': step.order,
-            'is_active': step.is_active,
-            'id': step.id
-        }
-        steps_list.append(steps_dict)
-
-
-        for request in user.requests:
+    for request in user.requests:
+            if request.is_actived==False:
+                continue
             evidences_list = []
             for evidence in request.evidences:
                 evidences_dict = {
@@ -206,7 +156,89 @@ def get_user_related_data(db: Session, user_id: int):
                 'id': request.id,
                 'evidences': evidences_list
             }
+            
+            step = step_crud.get_step(db=db, id=request.step_id)
+            if step.is_active == False: 
+                continue
+            if step.process.is_active == True:
+                processes_dict = {
+                    'title': step.process.title,
+                    'description': step.process.description,
+                    'objective': step.process.objective,
+                    'endingDate': step.process.endingDate.isoformat(),
+                    'createDate': step.process.createDate.isoformat(),
+                    'lastUpdate': step.process.lastUpdate.isoformat(),
+                    'is_active': step.process.is_active,
+                    'priority': step.process.priority,
+                    'status': step.process.status,
+                    'id': step.process.id,
+                    }
+                try:
+                    processes_list.index(processes_dict)
+                except ValueError:    
+                    processes_list.append(processes_dict)
             requests_list.append(requests_dict)
+
+    for process_user in user.processes:
+        process = process_user.process
+        if process.is_active ==False:
+            continue
+
+        processes_dict = {
+            'title': process.title,
+            'description': process.description,
+            'objective': process.objective,
+            'endingDate': process.endingDate.isoformat(),
+            'createDate': process.createDate.isoformat(),
+            'lastUpdate': process.lastUpdate.isoformat(),
+            'is_active': process.is_active,
+            'priority': process.priority,
+            'status': process.status,
+            'id': process.id,
+            }
+        try:
+            processes_list.index(processes_dict)
+        except ValueError:    
+            processes_list.append(processes_dict)
+
+
+    for user_step in user.steps:
+        step = user_step.step
+        if step.is_active == False: 
+            continue
+        if step.process.is_active == True:
+            processes_dict = {
+                'title': step.process.title,
+                'description': step.process.description,
+                'objective': step.process.objective,
+                'endingDate': step.process.endingDate.isoformat(),
+                'createDate': step.process.createDate.isoformat(),
+                'lastUpdate': step.process.lastUpdate.isoformat(),
+                'is_active': step.process.is_active,
+                'priority': step.process.priority,
+                'status': step.process.status,
+                'id': step.process.id,
+                }
+            try:
+                processes_list.index(processes_dict)
+            except ValueError:    
+                processes_list.append(processes_dict)
+        
+        steps_dict = {
+            'name': step.name,
+            'endDate': step.endDate.isoformat(),
+            'endingDate': step.endingDate.isoformat(),
+            'process_id': step.process_id,
+            'objective': step.objective,
+            'priority': step.priority,
+            'order': step.order,
+            'is_active': step.is_active,
+            'id': step.id
+        }
+        steps_list.append(steps_dict)
+
+
+        
             
         
         
