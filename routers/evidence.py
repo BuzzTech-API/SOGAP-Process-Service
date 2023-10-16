@@ -97,7 +97,7 @@ async def create_upload_file(
         <br>
         <h5>Dados da evidencia</h5>
         """ 
-
+        await file.seek(0)
         message = MessageSchema( #conteudos da mensagem
             subject="Evidencias", #titulo do email
             recipients=send_mail.EmailSchema, #emails
