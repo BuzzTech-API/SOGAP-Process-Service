@@ -44,10 +44,10 @@ def enable_2fa(
 ):
     # Aqui geramos uma chave secreta para o usuário em formato QR code base32
     user = current_user
+    base = pyotp.random_base32()
+    secret_key = OTP_KEY + user.email + base
 
-    secret_key = OTP_KEY + user.email
-
-    user_crud.save_secret_key(id=user.id, db=db, secret_key=secret_key)
+    user_crud.save_secret_key(id=user.id, db=db, secret_key=base)
     # Aqui criamos uma URI para o código QR
     uri = pyotp.totp.TOTP(generate_base32_key(secret_key)).provisioning_uri(
         name=user.name,
@@ -68,7 +68,8 @@ def verify_2fa(
     verification_code: schemas.VerificationCode,
     db: Session = Depends(get_db),
 ):
-    secret_key = user_crud.get_secret_key(db, current_user.email)
+    base = user_crud.get_secret_key(db, current_user.email)
+    secret_key = OTP_KEY + current_user.email + base
     if secret_key:
         totp = pyotp.TOTP(generate_base32_key(secret_key))
         print(generate_base32_key(secret_key))
@@ -103,7 +104,8 @@ def verify_2fa_First_Auth(
     verification_code: schemas.VerificationCode,
     db: Session = Depends(get_db),
 ):
-    secret_key = user_crud.get_secret_key(db, current_user.email)
+    base = user_crud.get_secret_key(db, current_user.email)
+    secret_key = OTP_KEY + current_user.email + base
     if secret_key:
         totp = pyotp.TOTP(generate_base32_key(secret_key))
         if totp.verify(verification_code.verification_code) == True:
