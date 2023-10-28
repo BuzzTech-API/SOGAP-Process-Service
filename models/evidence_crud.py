@@ -2,7 +2,8 @@ from sqlalchemy.orm import Session
 from database import schemas
 from database.database import Base
 from sqlalchemy import Column,Boolean, ForeignKey, Integer, String, Date
-
+from sqlalchemy.orm import relationship
+from models.validation_crud import Validation
 
 class Evidence(Base):
     """Classe para trabalhar a tabela de evidencia do banco"""
@@ -14,6 +15,10 @@ class Evidence(Base):
     idRequestForEvidence = Column(Integer, ForeignKey("request_for_evidence.id"))
     deliveryDate = Column(Date)
     is_active = Column(Boolean, default=True)
+    validation = relationship(
+        Validation,
+        viewonly=True,
+    )
 
 
 def get_evidence(db: Session, id: int):

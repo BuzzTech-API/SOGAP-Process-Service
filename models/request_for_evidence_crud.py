@@ -22,7 +22,11 @@ class RequestForEvidence(Base):
     deliveryDate = Column(Date)
     is_validated = Column(Boolean)
     is_actived = Column(Boolean, default=True)
-    evidences = relationship(Evidence, primaryjoin="and_(RequestForEvidence.id == Evidence.idRequestForEvidence, Evidence.is_active == True)", viewonly=True)
+    evidences = relationship(
+        Evidence,
+        primaryjoin="and_(RequestForEvidence.id == Evidence.idRequestForEvidence, Evidence.is_active == True)",
+        viewonly=True,
+    )
 
 
 def get_request_for_evidence(db: Session, id: int):
@@ -95,6 +99,7 @@ def delete_request_for_evidence(db: Session, id: int):
 
     return db_request_for_evidence
 
+
 def logical_delete_request_for_evidence(db: Session, id: int, is_active: bool):
     """Se o pedido de evidencia existir, deleta ele do banco"""
     db_request_for_evidence = (
@@ -102,10 +107,11 @@ def logical_delete_request_for_evidence(db: Session, id: int, is_active: bool):
     )
 
     if db_request_for_evidence:
-        db_request_for_evidence.is_actived= is_active
+        db_request_for_evidence.is_actived = is_active
         db.commit()
 
     return db_request_for_evidence
+
 
 def validate_evidece(db: Session, id: int):
     """Se o pedido de evidencia existir, deleta ele do banco"""
@@ -114,7 +120,7 @@ def validate_evidece(db: Session, id: int):
     )
 
     if db_request_for_evidence:
-        db_request_for_evidence.is_validated=True
+        db_request_for_evidence.is_validated = True
         db.commit()
         db.refresh(db_request_for_evidence)
 

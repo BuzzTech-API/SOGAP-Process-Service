@@ -4,6 +4,7 @@ from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from database.database import SessionLocal, engine
 from routers import evidence, process_user, process, request_for_evidence, step, user_step, user, login, twofactor
+from models.notification_crud import Notification
 
 database.Base.metadata.create_all(bind=engine)
 

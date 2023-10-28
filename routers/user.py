@@ -23,6 +23,7 @@ def create_admin():
                 email="adm@adm",
                 name="administrador",
                 password=pwd_context.hash('adm'),
+                photo_link=' ',
                 role="Administrador",
                 team="Administrador",
                 is_active=True,

@@ -3,6 +3,22 @@ from datetime import date
 from typing import List, Optional
 
 
+
+class ValidationBase(BaseModel):
+    evidence_id :int
+    reason :str
+    user_id :int
+    is_validated :bool
+
+class ValidationCreate(ValidationBase):
+    pass
+
+class Validation(ValidationBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
 class VerificationCode(BaseModel):
     verification_code: str
 
@@ -17,6 +33,7 @@ class EvidenceCreate(EvidenceBase):
 class Evidence(EvidenceBase):
     id: int
     is_active: bool
+    validation: List[Validation]
 
     class Config:
         from_attributes = True
@@ -129,6 +146,7 @@ class DeleteRequest(BaseModel):
 class UserBase(BaseModel):
     name: str
     email: str
+    photo_link: str
     role: str
     team: str
     is_active: bool
@@ -227,3 +245,22 @@ class TokenData(BaseModel):
 
     class Config:
         from_attributes = True
+
+class NotificationBase(BaseModel):
+    typeOfEvent: str
+    title: str
+    mensage: str
+    addressed: int
+    sender: int
+    is_visualized: bool
+
+class NotificationCreate(NotificationBase):
+    pass
+
+class Notification(NotificationBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+

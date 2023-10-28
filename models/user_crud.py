@@ -21,6 +21,7 @@ class User(Base):
     name = Column(String(60))
     email = Column(String(64), unique=True, index=True)
     password = Column(String(64))
+    photo_link = Column(String(150))
     is_2fa_enable = Column(Boolean, default=False) # Chave booleana para sabe se a autenticação em 2 fatores está habilitada
     secret_key_2fa = Column(String, nullable=True) # Chave secreta gerada para o usuário
     role = Column(String(60))
@@ -82,6 +83,7 @@ def create_user(db: Session, user: schemas.UserCreate):
         email=user.email,
         name=user.name,
         password=user.password,
+        photo_link=user.photo_link,
         is_2fa_enable =False,
         secret_key_2fa = '',
         role=user.role,
@@ -102,6 +104,7 @@ def update_user(db: Session, user: schemas.User):
         db_user.email = user.email
         db_user.name = user.name
         db_user.password = user.password
+        db_user.photo_link = user.photo_link
         db_user.is_2fa_enable =user.is_2fa_enable
         db_user.cargo = user.cargo
         db_user.team = user.team
