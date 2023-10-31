@@ -50,7 +50,7 @@ async def update_process(
     return process_crud.update_process(process=process, db=db)
 
 @router.put("/processes/delete", response_model=Optional[schemas.DeleteProcess])
-async def delete_process(
+async def delete_logical_process(
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     deleteProcess: schemas.DeleteProcess,
     db: Session = Depends(get_db),
@@ -65,4 +65,4 @@ async def delete_process(
     db: Session = Depends(get_db),
 ):
     """Rota para deletar processo pelo id"""
-    return process_crud.delete_process(id=id, db=db)
+    return process_crud.delete_process(id=id, db=db, is_active=False)
