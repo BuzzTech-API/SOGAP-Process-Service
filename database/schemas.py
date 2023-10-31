@@ -78,6 +78,7 @@ class UpdateStep(BaseModel):
     process_id: int
     objective: str
     priority: str
+    status: Optional[str]
     order: int
     is_active: bool
 
@@ -88,6 +89,7 @@ class StepBase(BaseModel):
     process_id: int
     objective: str
     priority: str
+    status: Optional[str]
     order: int
     is_active: bool
 

@@ -20,6 +20,7 @@ class Step(Base):
     endDate = Column(Date)
     process_id = Column(Integer, ForeignKey("process.id"))
     priority = Column(String(20))
+    status = Column(String)
     order = Column(Integer)
     is_active = Column(Boolean, default=True)
     requests = relationship(RequestForEvidence, primaryjoin="and_(Step.id == RequestForEvidence.step_id, RequestForEvidence.is_actived == True)", viewonly=True)
@@ -46,6 +47,7 @@ def create_step(db: Session, step: schemas.StepCreate):
         endDate=step.endDate,
         process_id=step.process_id,
         priority=step.priority,
+        status=step.status,
         order=step.order,
         is_active=step.is_active,
     )
@@ -66,6 +68,7 @@ def update_step(db: Session, step: schemas.UpdateStep):
         db_step.endDate = step.endDate
         db_step.process_id = step.process_id
         db_step.priority = step.priority
+        db_step.status = step.status
         db_step.order = step.order
         db_step.is_active = step.is_active
 
