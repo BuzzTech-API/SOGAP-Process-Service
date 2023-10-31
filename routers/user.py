@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from database import schemas
 from sqlalchemy.orm import Session
-from models import user_crud, oauth2
+from models import user_crud, oauth2, gcs
 from database.database import get_db, engine
 from typing import List, Annotated
 from passlib.context import CryptContext
@@ -125,3 +125,22 @@ async def delete_user(
     """Recebe o id do usuario e tenta deletar ele no banco caso ele exista ira deleta-lo e retorna ele
     mostrando seus dados, caso não tenho retornara None"""
     return user_crud.delete_user(id=id, db=db)
+
+
+
+@router.post("/uploadphoto/")
+async def create_upload_file(
+    current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
+    file: UploadFile = File(...),
+): 
+    """Rota para fazer upload de algum arquivo"""
+
+    try:
+        link = await gcs.GCStorage().upload_file(file) #chama a função que o upload do arquivo para a nuvem
+        
+        
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    
+    finally:
+        return  link #retorna o link e uma mensagem avisando que o email foi enviado
