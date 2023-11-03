@@ -15,6 +15,7 @@ user.create_admin()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Ou especifique origens específicas
+    allow_credentials=["*"],
     allow_methods=["*"],  # Ou especifique métodos específicos (GET, POST, etc.)
     allow_headers=["*"],  # Ou especifique cabeçalhos específicos
 )
