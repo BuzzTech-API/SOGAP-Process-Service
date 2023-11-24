@@ -1,9 +1,8 @@
 from typing import List
+from fastapi import UploadFile
 
-from fastapi import BackgroundTasks, FastAPI
 from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
 from pydantic import BaseModel, EmailStr
-from starlette.responses import JSONResponse
 
 from dotenv import dotenv_values
 
@@ -27,3 +26,27 @@ conf = ConnectionConfig(
     USE_CREDENTIALS = True,
     VALIDATE_CERTS = True
 )
+
+async def send_email(emails: str, file: UploadFile, requestNome: str, processoNome: str, etapaNome: str):
+    lista_emails = emails.split('&') #pega a string vindo do frontend, separa os emails e adciona em uma lista
+    lista_email_limpa = [i for i in lista_emails if i !='']
+    EmailSchema = lista_email_limpa
+    
+    # mensagem principal que vai chegar no email dos responsáveis
+    html = f"""
+    <h5>Processo - {processoNome}</h5>
+    <br>
+    <h5>Etapa - {etapaNome}</h5>
+    <br>
+    <h5>Dados da evidencia - {requestNome}</h5>
+    """ 
+    await file.seek(0)
+    message = MessageSchema( #conteudos da mensagem
+        subject="Evidencia", #titulo do email
+        recipients=EmailSchema, #emails
+        attachments=[file], #arquivos
+        body=html, #mensagem principal
+        subtype=MessageType.html)
+
+    fm = FastMail(conf)
+    await fm.send_message(message)

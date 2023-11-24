@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from models import request_for_evidence_crud, step_crud, process_crud
+from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, UploadFile
+from fastapi.responses import JSONResponse
 from database import schemas
 from sqlalchemy.orm import Session
 from models import evidence_crud, oauth2, gcs, send_mail
@@ -73,45 +75,29 @@ async def invalidate_evidence(
     """Rota para deletar uma evidencia pelo id"""
     return evidence_crud.invalidate_evidence(id=id, db=db)
 
-@router.post("/uploadfile/{emails}")
+@router.post("/uploadfile/{emails}/{idRequest}")
 async def create_upload_file(
+    background_tasks: BackgroundTasks,
     current_user: Annotated[schemas.User, Depends(oauth2.get_current_user)],
     emails: str,
+    idRequest: int,
+    db: Session = Depends(get_db),
     file: UploadFile = File(...)
 ): 
     """Rota para fazer upload de algum arquivo"""
 
     try:
+
+        request = request_for_evidence_crud.get_request_for_evidence(db=db, id=idRequest)
+        step = step_crud.get_step(db=db, id=request.step_id)
+        process = process_crud.get_process(db=db, id=step.process_id)
         
         link = await gcs.GCStorage().upload_file(file) #chama a função que o upload do arquivo para a nuvem
-        
-        lista_emails = emails.split('&') #pega a string vindo do frontend, separa os emails e adciona em uma lista
-        lista_email_limpa = []
-        for i in lista_emails:
-            if i !='':
-                lista_email_limpa.append(i)
-        send_mail.EmailSchema = lista_email_limpa
-        # mensagem principal que vai chegar no email dos responsáveis
-        html = """
-        <h5>Processo</h5>
-        <br>
-        <h5>Dados da evidencia</h5>
-        """ 
-        await file.seek(0)
-        message = MessageSchema( #conteudos da mensagem
-            subject="Evidencias", #titulo do email
-            recipients=send_mail.EmailSchema, #emails
-            attachments=[file], #arquivos
-            body=html, #mensagem principal
-            subtype=MessageType.html)
 
-        fm = FastMail(send_mail.conf) #função que envia os emails
-        await fm.send_message(message)
-        
+        background_tasks.add_task(send_mail.send_email, emails, file, request.requiredDocument, process.title, step.name)
         
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
 
-    return link, send_mail.content #retorna o link e uma mensagem avisando que o email foi enviado
-    
+    return link #retorna o link e uma mensagem avisando que o email foi enviado
